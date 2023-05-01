@@ -1,0 +1,18 @@
+---
+title: "DS 202 Final Project"
+author: "Nathan Catalano and Brett Simmons"
+date: "2023-05-01"
+output: html_document
+---
+
+Data set:
+
+Cleaning steps necessary:
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
