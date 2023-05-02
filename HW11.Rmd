@@ -5,9 +5,12 @@ date: "2023-05-01"
 output: html_document
 ---
 
-Data set:
+Data set: This baseball data set consists of hitting data from 1871 to 2017. It lists player names, year the statistics were recorded and the statistics themselves. There are over 100,000 observations and 22 variables.
+```{r}
+bb <- read.csv("lahman-batting.csv")
+```
 
-Cleaning steps necessary:
+Cleaning steps necessary: Some hitting statistics were not recorded back in 1871 such as intentional walks, hit by pitches, sacrifice hits and sacrifice flies. We will need to take that into a account and adjust the data accordingly. 
 
 
 
