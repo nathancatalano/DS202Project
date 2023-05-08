@@ -26,3 +26,11 @@ yearhits
 ggplot(yearhits, aes(x=playerID))+geom_bar(aes(weight=H))
 ```
 
+Which teams have scored the most runs since 1998 when the 30 current teams are in play?
+
+```{r}
+run= bb %>% filter(yearID>=1998) %>% group_by(playerID)
+ggplot(run, aes(x=yearID, y=R))+geom_point()+facet_wrap(~teamID)
+```
+
+
