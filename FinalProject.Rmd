@@ -140,7 +140,7 @@ ggplot(avg_height, aes(x = birthYear, y = mean_height)) +
 
 ```
 
-### Average weight of players by season
+### Average weight of players by season 
 
 As expected, the average weight of players has also steadily been increasing. The most recent average weight was in 2021 at 211 lbs. 
 ```{r}
