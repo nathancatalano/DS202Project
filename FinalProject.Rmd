@@ -10,11 +10,154 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+
 bb <- read.csv("lahman-batting.csv")
+# install.packages("Lahman")
 library(dplyr)
 library(ggplot2)
+library(Lahman)
 ```
 
+# Primary Research Questions
+
+### How have various statistics and player performance evolved over time?
+
+### Looking from the only the year 2000 and up how have various statistics and player performance evolved over time?
+
+# Relevant Variabes 
+
+```{r}
+data(Batting)
+data(Pitching)
+data(People)
+```
+
+### League Batting average evolution
+
+The league wide batting average has varied a lot over the seasons. It was highest in the late 1800's and since then has remained pretty consistently between .24 and .27 since the 1940's.
+
+```{r}
+avgs = Batting %>%
+  group_by(yearID) %>%
+  summarize(league_avg = sum(H) / sum(AB))
+
+ggplot(avgs, aes(x = yearID, y = league_avg)) +
+  geom_line() +
+  labs(x = "Year", y = "League Batting Average", title = "League Batting Average over Time")
+```
+
+### Total number of homeruns per season 
+
+The total number of home runs has been rising steadily. It peaked in 2019 at 6,776 with the next closest season being 2017 at 6,105.
+
+```{r}
+hr_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_HR = sum(HR))
+
+ggplot(hr_total, aes(x = yearID, y = total_HR)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Home Runs", title = "Total Home Runs by Season")
+
+```
+
+### Total number of hits per season
+
+Besides the fluctuations in the early seasons, the total number of hits was steady from the 1920's up until the 1960's when it began to increase. The notable outliers are during lockouts/strikes and the shortened covid season. After a slight decline in the early 2000's its beginning to level out again around 42,000 hits per season.
+
+```{r}
+hits_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_hits = sum(H))
+
+ggplot(hits_total, aes(x = yearID, y = total_hits)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Hits", title = "Total Hits by Season")
+
+```
+
+### Total walks per season
+
+Following a very similar trend to total hits by season, the number of walks has steadily been increasing. It peaked in 2000 and is leveling off around 16,000 per year.
+
+```{r}
+walks_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_walks = sum(BB))
+
+ggplot(walks_total, aes(x = yearID, y = total_walks)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Walks", title = "Total Walks by Season")
+
+```
+
+### Total stolen bases per season
+
+In the 1800's for a short while, stolen bases were credited when a base runner reached an extra base on a base hit from another player, hence why steals were so high. After that rule change the total number of stolen bases dropped immensely. During the dead ball era in the 1900's it rose again, peaking in 1914. After declining from then on stealing began to rise in the late 60's and 70's, close to current rates now. 
+
+```{r}
+sb_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_SB = sum(SB))
+
+ggplot(sb_total, aes(x = yearID, y = total_SB)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Stolen Bases", title = "Total Stolen Bases by Season")
+
+```
+
+### League average era per season
+
+The outliers in 1893 and 1894 occurred because the pitching distance was increased. Since then the league wide average era by season has remained relatively consistent with minor fluctuations season to season. 
+
+```{r}
+era_avgs = Pitching %>%
+  group_by(yearID) %>%
+  summarize(avg_ERA = mean(ERA, na.rm = TRUE))
+
+# Create a line chart of average ERA over time
+ggplot(era_avgs, aes(x = yearID, y = avg_ERA)) +
+  geom_line() +
+  labs(x = "Year", y = "Average ERA", title = "Average ERA by Season")
+
+```
+
+### Average height of players by birth year (1850 to 1999)
+
+The average height of players has been steadily increasing over the years. The average height is now slightly below 6'2". 
+
+```{r}
+People$birthYear = as.numeric(People$birthYear)
+greater_1850 = filter(People, birthYear >= 1850 & birthYear < 1999)
+
+avg_height = greater_1850 %>%
+  group_by(birthYear) %>%
+  summarize(mean_height = mean(height, na.rm = TRUE))
+
+ggplot(avg_height, aes(x = birthYear, y = mean_height)) +
+  geom_line() +
+  labs(x = "Birth Year", y = "Average Height (inches)", title = "Average Height by Birth Year (1850 - Present)")
+
+```
+
+### Average weight of players by season 
+
+As expected, the average weight of players has also steadily been increasing. The most recent average weight was in 2021 at 211 lbs. 
+```{r}
+People_filtered = filter(People, !is.na(height) & !is.na(weight))
+Batting_filtered = select(Batting, playerID, yearID) %>% distinct()
+
+joined = left_join(People_filtered, Batting_filtered, by = "playerID")
+
+avg_weight = joined %>%
+  group_by(yearID) %>%
+  summarize(mean_weight = mean(weight))
+
+ggplot(avg_weight, aes(x = yearID, y = mean_weight)) +
+  geom_line() +
+  labs(x = "Year", y = "Average Weight (lbs)", title = "Average Weight of MLB Players by Season")
+
+```
 
 Which players have gotten the most hits since 2000?
 ```{r}
