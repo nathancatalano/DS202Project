@@ -13,8 +13,114 @@ knitr::opts_chunk$set(echo = TRUE)
 bb <- read.csv("lahman-batting.csv")
 library(dplyr)
 library(ggplot2)
+library(Lahman)
 ```
 
+# Primary Research Questions
+
+### How have various statistics and player performance evolved over time?
+
+### Looking from the only the year 2000 and up how have various statistics and player performance evolved over time?
+
+# Relevant Variabes 
+
+```{r}
+data(Batting)
+data(Pitching)
+```
+
+### League Batting average evolution
+
+```{r}
+
+
+avgs = Batting %>%
+  group_by(yearID) %>%
+  summarize(league_avg = sum(H) / sum(AB))
+
+ggplot(avgs, aes(x = yearID, y = league_avg)) +
+  geom_line() +
+  labs(x = "Year", y = "League Batting Average", title = "League Batting Average over Time")
+```
+
+### Total number of homeruns per season 
+
+```{r}
+hr_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_HR = sum(HR))
+
+ggplot(hr_total, aes(x = yearID, y = total_HR)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Home Runs", title = "Total Home Runs by Season")
+
+```
+
+### Total number of hits per season
+
+```{r}
+hits_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_hits = sum(H))
+
+ggplot(hits_total, aes(x = yearID, y = total_hits)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Hits", title = "Total Hits by Season")
+
+```
+
+### Total walks per season
+
+```{r}
+walks_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_walks = sum(BB))
+
+ggplot(walks_total, aes(x = yearID, y = total_walks)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Walks", title = "Total Walks by Season")
+
+```
+
+### Total stolen bases per season
+
+```{r}
+sb_total = Batting %>%
+  group_by(yearID) %>%
+  summarize(total_SB = sum(SB))
+
+ggplot(sb_total, aes(x = yearID, y = total_SB)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Stolen Bases", title = "Total Stolen Bases by Season")
+
+```
+
+### League average era per season
+
+```{r}
+era_avgs = Pitching %>%
+  group_by(yearID) %>%
+  summarize(avg_ERA = mean(ERA, na.rm = TRUE))
+
+# Create a line chart of average ERA over time
+ggplot(era_avgs, aes(x = yearID, y = avg_ERA)) +
+  geom_line() +
+  labs(x = "Year", y = "Average ERA", title = "Average ERA by Season")
+
+```
+
+### Number of shutouts per season
+
+```{r}
+shutouts_total = Pitching %>%
+  group_by(yearID) %>%
+  summarize(total_shutouts = sum(SO == 9, na.rm = TRUE))
+
+ggplot(shutouts_total, aes(x = yearID, y = total_shutouts)) +
+  geom_line() +
+  labs(x = "Year", y = "Total Shutouts", title = "Total Shutouts by Season")
+
+```
 
 Which players have gotten the most hits since 2000?
 ```{r}
