@@ -1,0 +1,28 @@
+---
+title: "DS 202 Final Project"
+author: "Nathan Catalano and Brett Simmons"
+date: "2023-05-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+bb <- read.csv("lahman-batting.csv")
+library(dplyr)
+library(ggplot2)
+```
+
+
+Which players have gotten the most hits since 2000?
+```{r}
+yearhits = bb %>% filter(yearID >= 2000) %>% select(playerID, H) %>% group_by(playerID) %>% arrange(desc(H))
+yearhits
+```
+
+```{r}
+ggplot(yearhits, aes(x=playerID))+geom_bar(aes(weight=H))
+```
+
