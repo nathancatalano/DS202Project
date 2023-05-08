@@ -161,19 +161,20 @@ ggplot(avg_weight, aes(x = yearID, y = mean_weight)) +
 
 Which players have gotten the most hits since 2000?
 ```{r}
-yearhits = bb %>% filter(yearID >= 2000) %>% select(playerID, H) %>% group_by(playerID) %>% arrange(desc(H))
+yearhits = bb %>% filter(yearID >= 2000) %>% group_by(playerID) %>% summarise( total.hits= sum(H)) %>% arrange(desc(total.hits))
 yearhits
 ```
 
 ```{r}
-ggplot(yearhits, aes(x=playerID))+geom_bar(aes(weight=H))
+yearhitstop=yearhits[1:10, ]
+ggplot(yearhitstop, aes(x=playerID, fill=playerID))+geom_bar(aes(weight=total.hits))
 ```
 
 Which teams have scored the most runs since 1998 when the 30 current teams are in play?
 
 ```{r}
-run= bb %>% filter(yearID>=1998) %>% group_by(playerID)
-ggplot(run, aes(x=yearID, y=R))+geom_point()+facet_wrap(~teamID)
+run= bb %>% filter(yearID>=1998) %>% group_by(playerID,teamID,yearID) %>% summarise(total.runs=sum(R))
+ggplot(run, aes(x=yearID, y=total.runs))+geom_point()+facet_wrap(~teamID)
 ```
 
 
