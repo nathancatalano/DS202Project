@@ -217,3 +217,22 @@ ggplot(era00, (aes(x = ERA))) + geom_histogram()+geom_vline(aes(xintercept = mea
 ```
 
 Average pitchers' ERA is higher since 2000 compared to the 1980s and 1990s
+
+### How are the debut ages of players changing?
+```{r}
+joined$debut=as.Date(joined$debut)
+library("lubridate")
+joined$debut.age=time_length(difftime(joined$debut,joined$birthDate),"years")
+```
+
+```{r}
+joined2 = joined %>% mutate(debut=ymd(debut)) %>% mutate_at(vars(debut),funs(year,month,day))
+```
+
+```{r}
+age = joined2 %>% filter(year>=1980) %>% group_by(year) %>% summarise(debut.age)
+```
+
+```{r}
+ggplot(age, (aes(x=year, y=debut.age)))+geom_boxplot()+coord_flip()+facet_wrap(~year)
+```
