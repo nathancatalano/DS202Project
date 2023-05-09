@@ -186,7 +186,7 @@ ggplot(high, aes(x=yearID, y=total.runs,color=teamID))+geom_point()
 ```
 The chart shows the league leaders in runs scored for each year from 1998 to 2021. For example, the New York Yankees led the league in 1998 and the Houston Astros led the league in 2021.  
 
-###Are the number of international players increasing?
+### Are the number of international players increasing?
 
 ```{r}
 Country= joined %>% filter(yearID>=1980,birthCountry !="USA") %>% group_by(yearID) %>% summarise(total.players=n())
@@ -199,12 +199,23 @@ Country %>% ggplot(aes(x=yearID,y=total.players))+geom_line()
 The number of international players has about quadrupled from the year 1980 to 2021
 
 
-### What are the most common ERA ranges for pitchers in the 1980s and 1990s compared to since 2000s
+### What differences are there in ERA for pitchers in the 1980s and 1990s compared to since 2000s
 
 ```{r}
-era80 = Pitching %>% filter(between(yearID,1980,1999))
-era00 = Pitching %>% filter(yearID >=2000)
+era80 = Pitching %>% filter(between(yearID,1980,1999)) %>% filter(G > 20)
+era00 = Pitching %>% filter(yearID >=2000) %>% filter(G>20)
 ```
+
+```{r}
+ggplot(era80, (aes(x = ERA))) + geom_histogram()+geom_vline(aes(xintercept = mean(ERA)),col='red',size=2)
+```
+
+```{r}
+ggplot(era00, (aes(x = ERA))) + geom_histogram()+geom_vline(aes(xintercept = mean(ERA)),col='red',size=2)
+```
+
+Average pitchers' ERA is higher since 2000 compared to the 1980s and 1990s
+
 
 ```{r}
 
