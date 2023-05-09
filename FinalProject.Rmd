@@ -10,8 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-
-bb <- read.csv("lahman-batting.csv")
 # install.packages("Lahman")
 library(dplyr)
 library(ggplot2)
@@ -34,7 +32,7 @@ data(People)
 
 ### League Batting average evolution
 
-The league wide batting average has varied a lot over the seasons. It was highest in the late 1800's and since then has remained pretty consistently between .24 and .27 since the 1940's.
+The league wide batting average has varied a lot over the seasons. It was highest in the late 1800's and since then has remained pretty consistently between .240 and .270 since the 1940's.
 
 ```{r}
 avgs = Batting %>%
@@ -159,22 +157,42 @@ ggplot(avg_weight, aes(x = yearID, y = mean_weight)) +
 
 ```
 
-Which players have gotten the most hits since 2000?
+###Which players have gotten the most hits since 2000?
+
 ```{r}
-yearhits = bb %>% filter(yearID >= 2000) %>% group_by(playerID) %>% summarise( total.hits= sum(H)) %>% arrange(desc(total.hits))
-yearhits
+yearhits = Batting %>% filter(yearID >= 2000) %>% group_by(playerID) %>% summarise( total.hits= sum(H)) %>% arrange(desc(total.hits))
 ```
 
 ```{r}
 yearhitstop=yearhits[1:10, ]
 ggplot(yearhitstop, aes(x=playerID, fill=playerID))+geom_bar(aes(weight=total.hits))
 ```
+The top 10 players with the most hits since 2000 are: Albert Pujols, Ichiro Suzuki, Miguel Cabrera, Adrian Beltre, Derek Jeter, Robinson Cano, Carlos Beltran, Jimmy Rollins, Nick Markakis, and David Ortiz.
 
-Which teams have scored the most runs since 1998 when the 30 current teams are in play?
+
+###Which team has scored the most runs since 1998?
+
+The reason that 1998 is chosen is because that is when the league introduced the Arizona Diamondbacks and the Tampa Bay Devil Rays which gave the league 30 teams which still stands today
 
 ```{r}
-run= bb %>% filter(yearID>=1998) %>% group_by(playerID,teamID,yearID) %>% summarise(total.runs=sum(R))
-ggplot(run, aes(x=yearID, y=total.runs))+geom_point()+facet_wrap(~teamID)
+run= Batting %>% filter(yearID>=1998) %>% group_by(teamID,yearID) %>% summarise(total.runs=sum(R))
+
+high = run %>% group_by(yearID) %>% slice_max(total.runs)
+
 ```
 
+```{r}
+ggplot(high, aes(x=yearID, y=total.runs,color=teamID))+geom_point()
+```
+The chart shows the league leaders in runs scored for each year from 1998 to 2021. For example, the New York Yankees led the league in 1998 and the Houston Astros led the league in 2021.  
+
+###Which countries are players from?
+
+```{r}
+Country= People %>% group_by(birthCountry) %>% summarise(birthYear, n())
+```
+
+```{r}
+Country %>% ggplot(aes(x=birthYear))+geom_histogram()+facet_wrap(~birthCountry)
+```
 
