@@ -159,7 +159,7 @@ ggplot(avg_weight, aes(x = yearID, y = mean_weight)) +
 
 ```
 
-###Which players have gotten the most hits since 2000?
+### Which players have gotten the most hits since 2000?
 
 ```{r}
 yearhits = Batting %>% filter(yearID >= 2000) %>% group_by(playerID) %>% summarise( total.hits= sum(H)) %>% arrange(desc(total.hits))
@@ -172,7 +172,7 @@ ggplot(yearhitstop, aes(x=playerID, fill=playerID))+geom_bar(aes(weight=total.hi
 The top 10 players with the most hits since 2000 are: Albert Pujols, Ichiro Suzuki, Miguel Cabrera, Adrian Beltre, Derek Jeter, Robinson Cano, Carlos Beltran, Jimmy Rollins, Nick Markakis, and David Ortiz.
 
 
-###Which team has scored the most runs since 1998?
+### Which team has scored the most runs since 1998?
 
 The reason that 1998 is chosen is because that is when the league introduced the Arizona Diamondbacks and the Tampa Bay Devil Rays which gave the league 30 teams which still stands today
 
