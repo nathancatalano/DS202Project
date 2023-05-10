@@ -20,7 +20,7 @@ library(Lahman)
 
 ### How have various statistics and player performance evolved over time?
 
-### Looking from the only the year 2000 and up how have various statistics and player performance evolved over time?
+### Looking at different eras, how have various statistics and player/team performance changed over time?
 
 # Relevant Variabes 
 
@@ -143,6 +143,7 @@ ggplot(avg_height, aes(x = birthYear, y = mean_height)) +
 ### Average weight of players by season 
 
 As expected, the average weight of players has also steadily been increasing. The most recent average weight was in 2021 at 211 lbs. 
+
 ```{r}
 People_filtered = filter(People, !is.na(height) & !is.na(weight))
 Batting_filtered = select(Batting, playerID, yearID) %>% distinct()
@@ -157,6 +158,18 @@ ggplot(avg_weight, aes(x = yearID, y = mean_weight)) +
   geom_line() +
   labs(x = "Year", y = "Average Weight (lbs)", title = "Average Weight of MLB Players by Season")
 
+```
+
+### Current distribution of player weights
+
+```{r}
+players = inner_join(People, Batting, by = "playerID")
+players_2021 = filter(players, yearID == 2021)
+
+ggplot(players_2021, aes(x = weight)) + 
+  geom_histogram(binwidth = 5, color = "black", fill = "white") +
+  ggtitle("Histogram of Player Weights for 2021 Season") + 
+  xlab("Weight (lbs)") + ylab("Frequency")
 ```
 
 ### Which players have gotten the most hits since 2000?
@@ -275,5 +288,3 @@ winning_pct %>%
   summarize(mean_WinPct = mean(WinPct, na.rm = TRUE)) %>% 
   arrange(desc(mean_WinPct))
 ```
-
-
